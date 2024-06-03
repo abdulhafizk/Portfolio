@@ -1,0 +1,22 @@
+{
+  "name": "Abdul Hafizh Kustiawan | Fullstack Developer",
+  "short_name": "Abdul Hafizh Kustiawan | Fullstack Developer",
+  "description": "An online portfolio and blog by Abdul Hafizh Kustiawan. Showcase some of my past projects and some of my thougts on the world of web development.",
+  "display": "standalone",
+  "start_url": "/",
+  "theme-color": "#fff",
+  "background_color": "#000000",
+  "orientation": "potrait",
+  "icons": [
+    {
+      "src": "/logo192.png",
+      "types": "images/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
