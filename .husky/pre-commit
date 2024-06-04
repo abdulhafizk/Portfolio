@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run type-check
-npm run sort-impots
-npm runt lint
+npm run sort-imports 
+npm run lint
 
 npx lint-staged

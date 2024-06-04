@@ -1,197 +1,131 @@
-import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { getAllBlogWithViews } from '@lib/api';
-import { getTags, textIncludes } from '@lib/helper';
-import { useSessionStorage } from '@lib/hooks/useSessionStorage';
+import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
+import { clsx } from 'clsx';
 import { setTransition } from '@lib/transition';
 import { SEO } from '@components/common/seo';
-import { BlogTag } from '@components/blog/blog-tag';
-import { SortListbox, sortOptions } from '@components/blog/sort-listbox';
-import { BlogCard } from '@components/blog/blog-card';
 import { Accent } from '@components/ui/accent';
-import type { ChangeEvent } from 'react';
-import type { GetStaticPropsResult, InferGetStaticPropsType } from 'next/types';
-import type { MotionProps } from 'framer-motion';
-import type { Blog } from '@lib/types/contents';
-import type { BlogWithViews } from '@lib/api';
-import type { SortOption } from '@components/blog/sort-listbox';
+import { ThemeSwitch } from '@components/common/theme-switch';
 
-export default function Blog({
-  tags,
-  posts
-}: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-  const [sortOrder, setSortOrder] = useSessionStorage<SortOption>(
-    'sortOrder',
-    sortOptions[0]
-  );
-
-  const [filteredPosts, setFilteredPosts] = useState<Blog[]>([]);
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    const splittedSearch = search.split(' ');
-
-    const newFilteredPosts = posts.filter(({ title, description, tags }) => {
-      const isTitleMatch = textIncludes(title, search);
-      const isDescriptionMatch = textIncludes(description, search);
-      const isTagsMatch = splittedSearch.every((tag) => tags.includes(tag));
-
-      return isTitleMatch || isDescriptionMatch || isTagsMatch;
-    });
-
-    if (sortOrder === 'date') newFilteredPosts.sort();
-    else newFilteredPosts.sort((a, b) => b.views - a.views);
-
-    setFilteredPosts(newFilteredPosts);
-  }, [posts, search, sortOrder]);
-
-  const handleSearchChange = ({
-    target: { value }
-  }: ChangeEvent<HTMLInputElement>): void => setSearch(value);
-
-  const handleTagClick = (tag: string) => (): void => {
-    if (search.includes(tag)) {
-      const poppedTagSearch = search
-        .split(' ')
-        .filter((t) => t !== tag)
-        .join(' ');
-
-      setSearch(poppedTagSearch);
-    } else {
-      const appendedTagSearch = search ? `${search.trim()} ${tag}` : tag;
-
-      setSearch(appendedTagSearch);
-    }
-  };
-
-  const filteredTags = getTags(filteredPosts);
-
-  const isTagSelected = (tag: string): boolean => {
-    const isInFilteredTags = filteredTags.includes(tag);
-    const isInSearch = search.toLowerCase().split(' ').includes(tag);
-
-    return isInFilteredTags && isInSearch;
-  };
+export default function Design(): JSX.Element {
+  const { theme } = useTheme();
 
   return (
-    <main className='min-h-screen'>
-      <SEO
-        title='Blog'
-        description='A blog by Risal Amin. My thoughts on the web, tech, and everything in between.'
-      />
+    <main className='grid min-h-screen content-start gap-6'>
+      <SEO title='Design' description="risalamin.com's color palette" />
       <section className='grid gap-2'>
         <motion.h1
-          className='text-3xl font-bold md:text-5xl'
-          {...setTransition()}
+          className='text-5xl font-bold'
+          {...setTransition({ delayIn: 0.1 })}
         >
-          <Accent>Blog</Accent>
+          <Accent>Design</Accent>
         </motion.h1>
         <motion.p
           className='text-gray-600 dark:text-gray-300'
-          {...setTransition({ delayIn: 0.1 })}
+          {...setTransition({ delayIn: 0.2 })}
         >
-          My thoughts on the web, tech, and everything in between.
+          risalamin.com&apos;s color palette.
         </motion.p>
       </section>
-      <section className='mt-2'>
-        <motion.section {...setTransition({ delayIn: 0.2 })}>
-          <input
-            className='custom-input mt-2 w-full'
-            type='text'
-            value={search}
-            placeholder='Search blog...'
-            onChange={handleSearchChange}
-          />
-        </motion.section>
-        <motion.section
-          className='mt-2 flex flex-wrap items-center gap-2'
-          {...setTransition({ delayIn: 0.3 })}
-        >
-          <p className='text-sm font-medium text-gray-600 dark:text-gray-300'>
-            Choose topic:
-          </p>
-          {tags.map((tag) => (
-            <BlogTag
-              className='smooth-tab'
-              disabled={!filteredTags.includes(tag)}
-              onClick={handleTagClick(tag)}
-              key={tag}
-            >
-              {isTagSelected(tag) ? <Accent>{tag}</Accent> : tag}
-            </BlogTag>
-          ))}
-        </motion.section>
-        <motion.section className='mt-6' {...setTransition({ delayIn: 0.4 })}>
-          <SortListbox sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
-        </motion.section>
-      </section>
       <motion.section
-        className='card-layout mt-4'
-        {...setTransition({ delayIn: 0.5 })}
+        className='main-border rounded-md border-2 border-dashed p-4'
+        {...setTransition({ delayIn: 0.3 })}
       >
-        <AnimatePresence mode='popLayout'>
-          {filteredPosts.length ? (
-            <AnimatePresence>
-              {filteredPosts.map((post) => (
-                <motion.article
-                  {...variants}
-                  className='grid'
-                  layout='position'
-                  key={post.title}
-                >
-                  <BlogCard {...post} tag='div' isTagSelected={isTagSelected} />
-                </motion.article>
-              ))}
-            </AnimatePresence>
-          ) : (
-            <motion.h2
-              className='col-span-full text-center text-3xl font-bold'
-              {...setTransition({ delayIn: 0.2 })}
-              key='not-found'
-            >
-              <Accent>Sorry, not found :&#40;</Accent>
-            </motion.h2>
-          )}
-        </AnimatePresence>
+        <div className='flex justify-between'>
+          <h2 className='text-4xl font-bold capitalize'>{theme} Mode</h2>
+          <ThemeSwitch />
+        </div>
+        <p className='mt-2 text-gray-600 dark:text-gray-300'>
+          Font Family: Inter
+        </p>
+        <ul className='mt-3 grid grid-cols-[repeat(auto-fit,minmax(256px,1fr))] gap-4'>
+          {colorPalette.map(({ title, hexCode, className }) => (
+            <li className='flex items-center gap-2' key={title}>
+              <div
+                className={clsx('main-border h-10 w-10 rounded-md', className)}
+              />
+              <div>
+                <h3>{title}</h3>
+                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  {hexCode}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </motion.section>
-      {/* <motion.section className='mt-8' {...setTransition({ delayIn: 0.6 })}>
-        <SubscribeCard />
-      </motion.section> */}
     </main>
   );
 }
 
-type BlogProps = {
-  posts: BlogWithViews[];
-  tags: string[];
-};
-
-export async function getStaticProps(): Promise<
-  GetStaticPropsResult<BlogProps>
-> {
-  const posts = await getAllBlogWithViews();
-  const tags = getTags(posts);
-
-  return {
-    props: {
-      posts,
-      tags
-    },
-    revalidate: 60
-  };
-}
-
-const variants: MotionProps = {
-  initial: {
-    scale: 0.9,
-    opacity: 0
+const colorPalette = [
+  {
+    title: 'White Background',
+    hexCode: '#ffffff',
+    className: 'bg-white'
   },
-  animate: {
-    scale: 1,
-    opacity: 1
+  {
+    title: 'Black Background',
+    hexCode: '#222222',
+    className: 'bg-black'
   },
-  exit: {
-    scale: 0.9,
-    opacity: 0
+  {
+    title: 'White Text',
+    hexCode: '#ffffff',
+    className: 'bg-white'
+  },
+  {
+    title: 'Black Text',
+    hexCode: '#000000',
+    className: 'bg-black'
+  },
+  {
+    title: 'Gray 100 Text',
+    hexCode: '#f3f4f6',
+    className: 'bg-gray-100'
+  },
+  {
+    title: 'Gray 200 Text',
+    hexCode: '#e5e7eb',
+    className: 'bg-gray-200'
+  },
+  {
+    title: 'Gray 300 Text',
+    hexCode: '#d1d5db',
+    className: 'bg-gray-300'
+  },
+  {
+    title: 'Gray 400 Text',
+    hexCode: '#9ca3af',
+    className: 'bg-gray-400'
+  },
+  {
+    title: 'Gray 500 Text',
+    hexCode: '#6b7280',
+    className: 'bg-gray-500'
+  },
+  {
+    title: 'Gray 600 Text',
+    hexCode: '#4b5563',
+    className: 'bg-gray-600'
+  },
+  {
+    title: 'Gray 700 Text',
+    hexCode: '#374151',
+    className: 'bg-gray-700'
+  },
+  {
+    title: 'Gray 800 Text',
+    hexCode: '#1f2937',
+    className: 'bg-gray-800'
+  },
+  {
+    title: 'Gray 900 Text',
+    hexCode: '#111827',
+    className: 'bg-gray-900'
+  },
+  {
+    title: 'Gradient Color',
+    hexCode: '#a855f7 to #f472b6',
+    className: 'bg-gradient-to-tr from-accent-start to-accent-end'
   }
-};
+] as const;

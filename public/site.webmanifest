@@ -1,16 +1,16 @@
 {
-  "name": "Abdul Hafizh Kustiawan | Fullstack Developer",
-  "short_name": "Abdul Hafizh Kustiawan | Fullstack Developer",
-  "description": "An online portfolio and blog by Abdul Hafizh Kustiawan. Showcase some of my past projects and some of my thougts on the world of web development.",
+  "name": "Risal Amin | Fullstack Developer",
+  "short_name": "Risal Amin | Fullstack Developer",
+  "description": "An online portfolio and blog by Risal Amin. Showcase some of my past projects and some of my thoughts on the world of web development.",
   "display": "standalone",
   "start_url": "/",
-  "theme-color": "#fff",
+  "theme_color": "#fff",
   "background_color": "#000000",
-  "orientation": "potrait",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/logo192.png",
-      "types": "images/png",
+      "type": "image/png",
       "sizes": "192x192"
     },
     {
